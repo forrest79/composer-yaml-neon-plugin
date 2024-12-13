@@ -1,6 +1,8 @@
 {
 	"name": "forrest79/composer-yaml-neon-plugin",
+	"description": "Plugin to use composer config file in YAML or NEON format.",
 	"type": "composer-plugin",
+	"license": "BSD-3-Clause",
 	"keywords": [
 		"composer",
 		"yaml",
