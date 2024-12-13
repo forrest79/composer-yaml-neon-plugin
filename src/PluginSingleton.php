@@ -1,0 +1,107 @@
+<?php declare(strict_types=1);
+
+namespace Forrest79\ComposerYamlNeonPlugin;
+
+use Composer\Factory;
+use Composer\IO\IOInterface;
+use Symfony\Component\Console\Input\InputInterface;
+
+final class PluginSingleton
+{
+	private string|FALSE $initialWorkingDirectory;
+
+	private IOInterface|NULL $io = NULL;
+
+	public ComposerFile|NULL $composerFile = NULL;
+
+	private static self|NULL $instance = NULL;
+
+
+	public function __construct()
+	{
+		$this->initialWorkingDirectory = getcwd();
+	}
+
+
+	public function __destruct()
+	{
+		if ($this->composerFile === NULL) {
+			return;
+		}
+
+		$newSourceFile = $this->composerFile->clean();
+
+		if ($this->io !== NULL && $this->composerFile->hasDetectedConfigFile() && !$this->composerFile->isJson()) {
+			$newSourceInfo = $newSourceFile === NULL ? '' : sprintf(' Generated file \'%s\' was changed during the operation, new data was saved to the \'%s\'.', $this->composerFile->getConfigJsonFile(), $newSourceFile);
+			$this->io->write(PHP_EOL . sprintf('<question>Data from the \'%s\' was used.%s</question>', $this->composerFile->getDetectedConfigFile(), $newSourceInfo));
+		}
+	}
+
+
+	public function hasIO(): bool
+	{
+		return $this->io !== NULL;
+	}
+
+
+	public function setIO(IOInterface $io): void
+	{
+		$this->io = $io;
+	}
+
+
+	public function getComposerFile(): ComposerFile
+	{
+		return $this->composerFile ?? throw new Exceptions\RuntimeException('ComposerFile is not set.');
+	}
+
+
+	public function onPreCommandRun(InputInterface $input): void
+	{
+		if ($this->composerFile !== NULL) {
+			return;
+		}
+
+		$composerFile = new ComposerFile($this->getWorkingDirectory($input), Factory::getComposerFile());
+
+		try {
+			$composerFile->prepareJson();
+		} catch (Exceptions\TooManySourcesException $e) {
+			if ($this->io !== NULL) {
+				$this->io->writeError(sprintf(
+					'Source files \'%s\' are presented in working directory - use just one of them.',
+					implode('\' and \'', $e->getExistingSources()),
+				));
+			}
+		}
+
+		$this->composerFile = $composerFile;
+	}
+
+
+	private function getWorkingDirectory(InputInterface $input): string
+	{
+		// vendor/composer/composer/src/Composer/Console/Application.php::getNewWorkingDir()
+		$workingDir = $input->getParameterOption(['--working-dir', '-d']);
+		assert($workingDir === FALSE || is_string($workingDir));
+
+		if ($workingDir !== FALSE && !is_dir($workingDir)) {
+			throw new Exceptions\RuntimeException(sprintf('Invalid working directory specified, %s does not exist.', $workingDir));
+		}
+
+		return $workingDir === FALSE
+			? ($this->initialWorkingDirectory === FALSE ? throw new Exceptions\RuntimeException('Can\'t get initial working directory') : $this->initialWorkingDirectory)
+			: $workingDir;
+	}
+
+
+	public static function get(): self
+	{
+		if (self::$instance === NULL) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+}

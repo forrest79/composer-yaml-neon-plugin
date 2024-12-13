@@ -1,0 +1,47 @@
+{
+	"name": "forrest79/composer-yaml-neon-plugin",
+	"type": "composer-plugin",
+	"keywords": [
+		"composer",
+		"yaml",
+		"neon",
+		"plugin"
+    ],
+	"authors": [
+		{
+			"name": "Jakub Trmota",
+			"email": "jakub@trmota.cz"
+		}
+	],
+	"require": {
+		"composer-plugin-api": "^2.6",
+		"nette/neon": "^3.4",
+		"php": "^8.2",
+		"symfony/yaml": "^7.2"
+	},
+	"require-dev": {
+		"composer/composer": "^2.8",
+		"forrest79/phpcs": "^1.5",
+		"forrest79/phpcs-ignores": "^0.5",
+		"phpstan/phpstan": "^2.0",
+		"phpstan/phpstan-strict-rules": "^2.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Forrest79\\ComposerYamlNeonPlugin\\": "src"
+		}
+	},
+	"extra": {
+		"class": "Forrest79\\ComposerYamlNeonPlugin\\Plugin"
+	},
+	"scripts": {
+		"phpcs": "vendor/bin/phpcs --bootstrap=vendor/forrest79/phpcs-ignores/src/bootstrap.php -s src",
+		"phpstan": "vendor/bin/phpstan analyse src",
+		"tests": "tests/composer && tests/run-tests"
+	},
+	"config": {
+ 		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": false
+		}
+	}
+}

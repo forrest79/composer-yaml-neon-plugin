@@ -1,0 +1,6 @@
+/tests/@home/cache/
+/tests/@home/vendor/
+/tests/@home/.htaccess
+/tests/@home/composer.lock
+/vendor/
+/composer.lock

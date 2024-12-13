@@ -1,0 +1,30 @@
+ignoreErrors:
+	-
+		sniff: SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+		message: Unused parameter $input.
+		count: 1
+		path: src/GenerateComposerJsonCommand.php
+
+	-
+		sniff: SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+		message: Unused parameter $composer.
+		count: 3
+		path: src/Plugin.php
+
+	-
+		sniff: SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+		message: Unused parameter $io.
+		count: 2
+		path: src/Plugin.php
+
+	-
+		sniff: SlevomatCodingStandard.Classes.ForbiddenPublicProperty.ForbiddenPublicProperty
+		message: Do not use public properties. Use method access instead.
+		count: 1
+		path: src/PluginSingleton.php
+
+	-
+		sniff: Forrest79CodingStandard.Exceptions.ExceptionDeclaration.NotChainable
+		message: Exception is not chainable. It must have optional \Throwable as last constructor argument and has "array".
+		count: 1
+		path: src/Exceptions/TooManySourcesException.php

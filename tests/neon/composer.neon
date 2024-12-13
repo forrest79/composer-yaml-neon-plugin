@@ -1,0 +1,22 @@
+# You can use comments...
+
+name: forrest79/composer-yaml-neon-plugin-tests # ...or this comments
+
+authors:
+	-
+		name: Jakub Trmota
+		email: jakub@trmota.cz
+
+require:
+	forrest79/pagination: '^0.3'
+	php: '>=8.2'
+
+require-dev:
+    forrest79/phpfpm-request: ^0.8
+
+autoload:
+	psr-4:
+		Forrest79\ComposerYamlNeonPluginTests\: src
+
+scripts:
+	phpcs: vendor/bin/phpcs -s src

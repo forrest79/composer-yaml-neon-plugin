@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="PhPgSql">
+	<rule ref="./vendor/forrest79/phpcs/Forrest79CodingStandard/ruleset.xml"/>
+
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+		<properties>
+			<property name="rootNamespaces" type="array" value="
+				src=>Forrest79\ComposerYamlNeonPlugin,
+			"/>
+		</properties>
+	</rule>
+</ruleset>

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+(cd ${0%/*}/json && ./../composer update) \
+  && (cd ${0%/*}/neon && ./../composer update) \
+  && (cd ${0%/*}/yaml && ./../composer update) \
+  && (cd ${0%/*}/yml && ./../composer update) \
+  && (cd ${0%/*}/json && ./../composer require forrest79/dev-certs) \
+  && (cd ${0%/*}/neon && ./../composer require forrest79/dev-certs) \
+  && (cd ${0%/*}/yaml && ./../composer require forrest79/dev-certs) \
+  && (cd ${0%/*}/yml && ./../composer require forrest79/dev-certs) \
+  && (cd ${0%/*} && COMPOSER=./json/composer.json ./composer require symfony/polyfill-ctype) \
+  && (cd ${0%/*} && COMPOSER=./neon/composer.json ./composer require symfony/polyfill-ctype) \
+  && (cd ${0%/*} && COMPOSER=./yaml/composer.json ./composer require symfony/polyfill-ctype) \
+  && (cd ${0%/*} && COMPOSER=./yml/composer.json ./composer require symfony/polyfill-ctype)

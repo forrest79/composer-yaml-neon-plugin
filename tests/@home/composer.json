@@ -1,0 +1,19 @@
+{
+	"repositories": [
+		{
+			"type": "path",
+            "url": "../../",
+            "options": {
+                "symlink": true
+            }
+		}
+	],
+	"require": {
+		"forrest79/composer-yaml-neon-plugin": "@dev"
+	},
+	"config": {
+		"allow-plugins": {
+			"forrest79/composer-yaml-neon-plugin": true
+		}
+	}
+}
