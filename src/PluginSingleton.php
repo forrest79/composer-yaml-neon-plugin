@@ -66,17 +66,7 @@ final class PluginSingleton
 		}
 
 		$composerFile = new ComposerFile($this->getWorkingDirectory($input), Factory::getComposerFile());
-
-		try {
-			$composerFile->prepareJson();
-		} catch (Exceptions\TooManyConfigsException $e) {
-			if ($this->io !== NULL) {
-				$this->io->writeError(sprintf(
-					'Config files \'%s\' are presented in working directory - use just one of them.',
-					implode('\' and \'', $e->getExistingConfigs()),
-				));
-			}
-		}
+		$composerFile->prepareJson();
 
 		$this->composerFile = $composerFile;
 	}
