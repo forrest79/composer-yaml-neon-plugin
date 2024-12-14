@@ -23,15 +23,15 @@ final class GenerateComposerJsonCommand extends BaseCommand
 
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
-		$sourceFile = PluginSingleton::get()->getComposerFile();
+		$composerFile = PluginSingleton::get()->getComposerFile();
 
-		if ($sourceFile->hasDetectedConfigFile()) {
-			if ($sourceFile->isJson()) {
-				$output->writeln(sprintf('<comment>There is already \'%s\', nothing was generated.</comment>', $sourceFile->getConfigJsonFile()));
+		if ($composerFile->hasDetectedConfigFile()) {
+			if ($composerFile->isJson()) {
+				$output->writeln(sprintf('<comment>There is already \'%s\', nothing was generated.</comment>', $composerFile->getConfigJsonFile()));
 			} else {
-				$sourceFile->keepJson();
+				$composerFile->keepJson();
 
-				$output->writeln(sprintf('<info>\'%s\' was generated from \'%s\'.</info>', $sourceFile->getConfigJsonFile(), $sourceFile->getDetectedConfigFile()));
+				$output->writeln(sprintf('<info>\'%s\' was generated from \'%s\'.</info>', $composerFile->getConfigJsonFile(), $composerFile->getDetectedConfigFile()));
 			}
 		} else {
 			$output->writeln('<error>There is no composer config file.</error>');

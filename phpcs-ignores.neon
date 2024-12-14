@@ -27,4 +27,4 @@ ignoreErrors:
 		sniff: Forrest79CodingStandard.Exceptions.ExceptionDeclaration.NotChainable
 		message: Exception is not chainable. It must have optional \Throwable as last constructor argument and has "array".
 		count: 1
-		path: src/Exceptions/TooManySourcesException.php
+		path: src/Exceptions/TooManyConfigsException.php

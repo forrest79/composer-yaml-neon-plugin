@@ -37,7 +37,7 @@
 		"class": "Forrest79\\ComposerYamlNeonPlugin\\Plugin"
 	},
 	"scripts": {
-		"phpcs": "vendor/bin/phpcs --bootstrap=vendor/forrest79/phpcs-ignores/src/bootstrap.php -s src",
+		"phpcs": "vendor/bin/phpcs --bootstrap=vendor/forrest79/phpcs-ignores/src/bootstrap-outdated.php -s src",
 		"phpstan": "vendor/bin/phpstan analyse src",
 		"tests": "tests/composer && tests/run-tests"
 	},

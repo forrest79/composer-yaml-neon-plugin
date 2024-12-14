@@ -6,6 +6,9 @@ use Composer\Factory;
 use Composer\IO\IOInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
+/**
+ * Composer is sometimes cloning plugin instance (with a different name) and we need this only in one instance to works correctly.
+ */
 final class PluginSingleton
 {
 	private string|FALSE $initialWorkingDirectory;
@@ -29,11 +32,11 @@ final class PluginSingleton
 			return;
 		}
 
-		$newSourceFile = $this->composerFile->clean();
+		$newConfigFile = $this->composerFile->clean();
 
 		if ($this->io !== NULL && $this->composerFile->hasDetectedConfigFile() && !$this->composerFile->isJson()) {
-			$newSourceInfo = $newSourceFile === NULL ? '' : sprintf(' Generated file \'%s\' was changed during the operation, new data was saved to the \'%s\'.', $this->composerFile->getConfigJsonFile(), $newSourceFile);
-			$this->io->write(PHP_EOL . sprintf('<question>Data from the \'%s\' was used.%s</question>', $this->composerFile->getDetectedConfigFile(), $newSourceInfo));
+			$newConfigInfo = $newConfigFile === NULL ? '' : sprintf(' Generated file \'%s\' was changed during the operation, new data was saved to the \'%s\'.', $this->composerFile->getConfigJsonFile(), $newConfigFile);
+			$this->io->write(PHP_EOL . sprintf('<question>Data from the \'%s\' was used.%s</question>', $this->composerFile->getDetectedConfigFile(), $newConfigInfo));
 		}
 	}
 
@@ -66,11 +69,11 @@ final class PluginSingleton
 
 		try {
 			$composerFile->prepareJson();
-		} catch (Exceptions\TooManySourcesException $e) {
+		} catch (Exceptions\TooManyConfigsException $e) {
 			if ($this->io !== NULL) {
 				$this->io->writeError(sprintf(
-					'Source files \'%s\' are presented in working directory - use just one of them.',
-					implode('\' and \'', $e->getExistingSources()),
+					'Config files \'%s\' are presented in working directory - use just one of them.',
+					implode('\' and \'', $e->getExistingConfigs()),
 				));
 			}
 		}

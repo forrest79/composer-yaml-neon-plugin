@@ -21,7 +21,7 @@ final class ComposerFile
 
 	private string|NULL $originalComposerJsonContent = NULL;
 
-	private bool $removeJsonSourceFileOnClean = TRUE;
+	private bool $removeComposerJsonFileOnClean = TRUE;
 
 
 	public function __construct(string $workingDir, string $composerJsonFile)
@@ -39,18 +39,18 @@ final class ComposerFile
 	public function prepareJson(): void
 	{
 		$basePath = substr($this->composerJsonPath, 0, -1 * strlen(pathinfo($this->composerJsonPath, PATHINFO_EXTENSION)));
-		$existingSources = [];
+		$existingConfigs = [];
 		foreach ([self::JSON, self::YAML, self::YML, self::NEON] as $extension) {
 			$checkPath = $basePath . $extension;
 			if (is_file($checkPath)) {
-				$existingSources[] = pathinfo($checkPath, PATHINFO_BASENAME);
+				$existingConfigs[] = pathinfo($checkPath, PATHINFO_BASENAME);
 				$this->detectedConfigPath = $checkPath;
 			}
 		}
 
-		if (count($existingSources) > 1) {
+		if (count($existingConfigs) > 1) {
 			$this->detectedConfigPath = NULL;
-			throw new Exceptions\TooManySourcesException($existingSources);
+			throw new Exceptions\TooManyConfigsException($existingConfigs);
 		}
 
 		if ($this->isJson()) {
@@ -73,19 +73,19 @@ final class ComposerFile
 
 	public function isJson(): bool
 	{
-		return $this->hasComposerSourceFileExtension(self::JSON);
+		return $this->hasComposerConfigFileExtension(self::JSON);
 	}
 
 
 	public function isNeon(): bool
 	{
-		return $this->hasComposerSourceFileExtension(self::NEON);
+		return $this->hasComposerConfigFileExtension(self::NEON);
 	}
 
 
 	public function isYaml(): bool
 	{
-		return $this->hasComposerSourceFileExtension(self::YAML) || $this->hasComposerSourceFileExtension(self::YML);
+		return $this->hasComposerConfigFileExtension(self::YAML) || $this->hasComposerConfigFileExtension(self::YML);
 	}
 
 
@@ -102,7 +102,7 @@ final class ComposerFile
 
 	public function clean(): string|NULL
 	{
-		$newSourceFile = NULL;
+		$newConfigFile = NULL;
 
 		if ($this->detectedConfigPath !== NULL) {
 			if ($this->originalComposerJsonContent !== NULL) {
@@ -111,26 +111,26 @@ final class ComposerFile
 				if ($this->originalComposerJsonContent !== $newComposerJsonContent) {
 					$json = json_decode($newComposerJsonContent, TRUE, flags: JSON_THROW_ON_ERROR);
 
-					$newSourcePath = $this->detectedConfigPath . '.' . time();
-					$newSource = '';
+					$newConfigPath = $this->detectedConfigPath . '.' . time();
+					$newConfig = '';
 					if ($this->isNeon()) {
-						$newSource = trim(Neon::encode($json, TRUE)) . PHP_EOL;
+						$newConfig = trim(Neon::encode($json, TRUE)) . PHP_EOL;
 					} else if ($this->isYaml()) {
-						$newSource = Yaml\Yaml::dump($json, 100);
+						$newConfig = Yaml\Yaml::dump($json, 100);
 					}
 
-					file_put_contents($newSourcePath, $newSource);
+					file_put_contents($newConfigPath, $newConfig);
 
-					$newSourceFile = pathinfo($newSourcePath, PATHINFO_BASENAME);
+					$newConfigFile = pathinfo($newConfigPath, PATHINFO_BASENAME);
 				}
 			}
 
-			if ($this->removeJsonSourceFileOnClean) {
+			if ($this->removeComposerJsonFileOnClean) {
 				@unlink($this->composerJsonPath); // intentionally @ - file may not exists
 			}
 		}
 
-		return $newSourceFile;
+		return $newConfigFile;
 	}
 
 
@@ -166,11 +166,11 @@ final class ComposerFile
 
 	public function keepJson(): void
 	{
-		$this->removeJsonSourceFileOnClean = FALSE;
+		$this->removeComposerJsonFileOnClean = FALSE;
 	}
 
 
-	private function hasComposerSourceFileExtension(string $extension): bool
+	private function hasComposerConfigFileExtension(string $extension): bool
 	{
 		if ($this->detectedConfigPath !== NULL && is_file($this->detectedConfigPath)) {
 			return strtolower(pathinfo($this->detectedConfigPath, PATHINFO_EXTENSION)) === strtolower($extension);
