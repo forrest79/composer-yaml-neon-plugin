@@ -99,7 +99,7 @@ config:
 		dealerdirect/phpcodesniffer-composer-installer: false
 ```
 
-> IMPORTANT: You can use only one definition file in a directory.
+> IMPORTANT: You can use only one config file in a directory.
 
 
 ### Generate composer.json
@@ -111,4 +111,4 @@ To generate classic `composer.json` file, use `composer generate-composer-json` 
 
 Simply! If plugin detects `YAML` or `NEON` config file at the startup, it will generate `composer.json` and at the end is JSON file cleaned. That's the magic.
 
-When `composer.json` is changed by Composer (i.e., after `composer require` command etc.), the new definition file in YAML or NEON format is saved next to the original definition file, and you must make manual diff and merge.
+When `composer.json` is changed by Composer (i.e., after `composer require` command etc.), the new config file in YAML or NEON format is saved next to the original one, and you must make manual diff and merge.
