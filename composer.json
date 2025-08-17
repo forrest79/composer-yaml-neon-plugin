@@ -19,14 +19,15 @@
 		"composer-plugin-api": "^2.6",
 		"nette/neon": "^3.4",
 		"php": "^8.2",
-		"symfony/yaml": "^7.2"
+		"symfony/yaml": "^7.3"
 	},
 	"require-dev": {
 		"composer/composer": "^2.8",
-		"forrest79/phpcs": "^1.5",
+		"forrest79/phpcs": "^2.0",
 		"forrest79/phpcs-ignores": "^0.5",
-		"phpstan/phpstan": "^2.0",
-		"phpstan/phpstan-strict-rules": "^2.0"
+		"phpstan/phpstan": "^2.1",
+		"phpstan/phpstan-strict-rules": "^2.0",
+		"shipmonk/phpstan-rules": "^4.1"
 	},
 	"autoload": {
 		"psr-4": {

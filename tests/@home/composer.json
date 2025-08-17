@@ -1,4 +1,7 @@
 {
+	"require": {
+		"forrest79/composer-yaml-neon-plugin": "@dev"
+	},
 	"repositories": [
 		{
 			"type": "path",
@@ -8,9 +11,6 @@
             }
 		}
 	],
-	"require": {
-		"forrest79/composer-yaml-neon-plugin": "@dev"
-	},
 	"config": {
 		"allow-plugins": {
 			"forrest79/composer-yaml-neon-plugin": true

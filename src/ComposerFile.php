@@ -17,11 +17,11 @@ final class ComposerFile
 
 	private string $composerJsonFile;
 
-	private string|NULL $detectedConfigPath = NULL;
+	private string|null $detectedConfigPath = null;
 
-	private string|NULL $originalComposerJsonContent = NULL;
+	private string|null $originalComposerJsonContent = null;
 
-	private bool $removeComposerJsonFileOnClean = TRUE;
+	private bool $removeComposerJsonFileOnClean = true;
 
 
 	public function __construct(string $workingDir, string $composerJsonFile)
@@ -49,13 +49,13 @@ final class ComposerFile
 		}
 
 		if (count($existingConfigs) > 1) {
-			$this->detectedConfigPath = NULL;
+			$this->detectedConfigPath = null;
 			throw new Exceptions\TooManyConfigsException($existingConfigs);
 		}
 
 		if ($this->isJson()) {
 			$this->keepJson();
-		} else if ($this->detectedConfigPath !== NULL) {
+		} else if ($this->detectedConfigPath !== null) {
 			$data = self::fileGetContent($this->detectedConfigPath);
 			$array = [];
 
@@ -100,21 +100,21 @@ final class ComposerFile
 	}
 
 
-	public function clean(): string|NULL
+	public function clean(): string|null
 	{
-		$newConfigFile = NULL;
+		$newConfigFile = null;
 
-		if ($this->detectedConfigPath !== NULL) {
-			if ($this->originalComposerJsonContent !== NULL) {
+		if ($this->detectedConfigPath !== null) {
+			if ($this->originalComposerJsonContent !== null) {
 				$newComposerJsonContent = self::fileGetContent($this->composerJsonPath);
 
 				if ($this->originalComposerJsonContent !== $newComposerJsonContent) {
-					$json = json_decode($newComposerJsonContent, TRUE, flags: JSON_THROW_ON_ERROR);
+					$json = json_decode($newComposerJsonContent, true, flags: JSON_THROW_ON_ERROR);
 
 					$newConfigPath = $this->detectedConfigPath . '.' . time();
 					$newConfig = '';
 					if ($this->isNeon()) {
-						$newConfig = trim(Neon::encode($json, TRUE)) . PHP_EOL;
+						$newConfig = trim(Neon::encode($json, true)) . PHP_EOL;
 					} else if ($this->isYaml()) {
 						$newConfig = Yaml\Yaml::dump($json, 100);
 					}
@@ -146,13 +146,13 @@ final class ComposerFile
 
 	public function hasDetectedConfigFile(): bool
 	{
-		return $this->detectedConfigPath !== NULL;
+		return $this->detectedConfigPath !== null;
 	}
 
 
 	public function getDetectedConfigFile(): string
 	{
-		if ($this->detectedConfigPath === NULL) {
+		if ($this->detectedConfigPath === null) {
 			throw new Exceptions\RuntimeException('There is no detected config file.');
 		}
 
@@ -166,24 +166,24 @@ final class ComposerFile
 
 	public function keepJson(): void
 	{
-		$this->removeComposerJsonFileOnClean = FALSE;
+		$this->removeComposerJsonFileOnClean = false;
 	}
 
 
 	private function hasComposerConfigFileExtension(string $extension): bool
 	{
-		if ($this->detectedConfigPath !== NULL && is_file($this->detectedConfigPath)) {
+		if ($this->detectedConfigPath !== null && is_file($this->detectedConfigPath)) {
 			return strtolower(pathinfo($this->detectedConfigPath, PATHINFO_EXTENSION)) === strtolower($extension);
 		}
 
-		return FALSE;
+		return false;
 	}
 
 
 	private static function fileGetContent(string $path): string
 	{
 		$data = @file_get_contents($path); // intentionally @
-		if ($data === FALSE) {
+		if ($data === false) {
 			throw new Exceptions\RuntimeException(sprintf('File \'%s\' not exists or is not readable.', $path));
 		}
 

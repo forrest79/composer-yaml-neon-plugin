@@ -11,13 +11,13 @@ use Symfony\Component\Console\Input\InputInterface;
  */
 final class PluginSingleton
 {
-	private string|FALSE $initialWorkingDirectory;
+	private string|false $initialWorkingDirectory;
 
-	private IOInterface|NULL $io = NULL;
+	private IOInterface|null $io = null;
 
-	public ComposerFile|NULL $composerFile = NULL;
+	public ComposerFile|null $composerFile = null;
 
-	private static self|NULL $instance = NULL;
+	private static self|null $instance = null;
 
 
 	public function __construct()
@@ -28,14 +28,14 @@ final class PluginSingleton
 
 	public function __destruct()
 	{
-		if ($this->composerFile === NULL) {
+		if ($this->composerFile === null) {
 			return;
 		}
 
 		$newConfigFile = $this->composerFile->clean();
 
-		if ($this->io !== NULL && $this->composerFile->hasDetectedConfigFile() && !$this->composerFile->isJson()) {
-			$newConfigInfo = $newConfigFile === NULL ? '' : sprintf(' Generated file \'%s\' was changed during the operation, new data was saved to the \'%s\'.', $this->composerFile->getConfigJsonFile(), $newConfigFile);
+		if ($this->io !== null && $this->composerFile->hasDetectedConfigFile() && !$this->composerFile->isJson()) {
+			$newConfigInfo = $newConfigFile === null ? '' : sprintf(' Generated file \'%s\' was changed during the operation, new data was saved to the \'%s\'.', $this->composerFile->getConfigJsonFile(), $newConfigFile);
 			$this->io->write(PHP_EOL . sprintf('<question>Data from the \'%s\' was used.%s</question>', $this->composerFile->getDetectedConfigFile(), $newConfigInfo));
 		}
 	}
@@ -43,7 +43,7 @@ final class PluginSingleton
 
 	public function hasIO(): bool
 	{
-		return $this->io !== NULL;
+		return $this->io !== null;
 	}
 
 
@@ -61,7 +61,7 @@ final class PluginSingleton
 
 	public function onPreCommandRun(InputInterface $input): void
 	{
-		if ($this->composerFile !== NULL) {
+		if ($this->composerFile !== null) {
 			return;
 		}
 
@@ -76,21 +76,21 @@ final class PluginSingleton
 	{
 		// vendor/composer/composer/src/Composer/Console/Application.php::getNewWorkingDir()
 		$workingDir = $input->getParameterOption(['--working-dir', '-d']);
-		assert($workingDir === FALSE || is_string($workingDir));
+		assert($workingDir === false || is_string($workingDir));
 
-		if ($workingDir !== FALSE && !is_dir($workingDir)) {
+		if ($workingDir !== false && !is_dir($workingDir)) {
 			throw new Exceptions\RuntimeException(sprintf('Invalid working directory specified, %s does not exist.', $workingDir));
 		}
 
-		return $workingDir === FALSE
-			? ($this->initialWorkingDirectory === FALSE ? throw new Exceptions\RuntimeException('Can\'t get initial working directory') : $this->initialWorkingDirectory)
+		return $workingDir === false
+			? ($this->initialWorkingDirectory === false ? throw new Exceptions\RuntimeException('Can\'t get initial working directory') : $this->initialWorkingDirectory)
 			: $workingDir;
 	}
 
 
 	public static function get(): self
 	{
-		if (self::$instance === NULL) {
+		if (self::$instance === null) {
 			self::$instance = new self();
 		}
 
